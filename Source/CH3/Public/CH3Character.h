@@ -24,6 +24,7 @@ public:
 	UCameraComponent* CameraComp;
 
 protected:
+	//캐릭터의 컨트롤러와 함수와 연결
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION()
