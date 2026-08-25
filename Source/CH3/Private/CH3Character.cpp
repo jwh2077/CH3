@@ -27,8 +27,40 @@ ACH3Character::ACH3Character()
 	SprintSpeed = NormalSpeed * SprintSpeedMultiplier;
 
 	GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+
+	MaxHealth = 100.0f;
+	Health = MaxHealth;
 }
 
+
+float ACH3Character::GetHealth() const
+{
+	return Health;
+}
+
+void ACH3Character::AddHealth(float Amount)
+{
+	Health = FMath::Clamp(Health + Amount, 0.0f, MaxHealth);
+
+	UE_LOG(LogTemp, Warning, TEXT("Health %f HP: %f"), Amount, Health);
+}
+
+float ACH3Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	//기본 클래스의 데미지
+	float ActualDemage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	Health = FMath::Clamp(Health - DamageAmount, 0.0f, MaxHealth);
+	
+	UE_LOG(LogTemp, Warning, TEXT("Damege %f HP: %f"),ActualDemage,Health);
+
+	if (Health <= 0)
+	{
+		OnDeath();
+	}
+
+	return 0.0f;
+}
 
 void ACH3Character::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -90,6 +122,7 @@ void ACH3Character::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	}
 }
 
+
 void ACH3Character::Move(const FInputActionValue& value)
 {
 	if (!Controller)return;
@@ -142,5 +175,10 @@ void ACH3Character::StarSprint(const FInputActionValue& value)
 void ACH3Character::StopSprint(const FInputActionValue& value)
 {
 		GetCharacterMovement()->MaxWalkSpeed = NormalSpeed;
+}
+
+void ACH3Character::OnDeath()
+{
+	//게임 오버
 }
 

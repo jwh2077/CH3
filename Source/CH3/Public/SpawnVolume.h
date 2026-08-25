@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ItemSpawnRow.h"
 #include "GameFramework/Actor.h"
 #include "SpawnVolume.generated.h"
 
@@ -17,11 +18,19 @@ public:
 	// Sets default values for this actor's properties
 	ASpawnVolume();
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VALUEVALUE")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
 	USceneComponent* Scene;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "VALUEVALUE")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Spawning")
 	UBoxComponent* SpawningBox;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Spawning")
+	UDataTable* ItemDataTable;
 
-	FVector GetRandomPointInVolume()const;
-	void SpwnItem(TSubclassOf<AActor>ItemClass);
+	UFUNCTION(BlueprintCallable, Category = "Spawning")
+	AActor* SpawnRandomItem();
+
+	FItemSpawnRow* GetRandomItem()const;
+	AActor* SpawnItem(TSubclassOf<AActor>ItemClass);
+	FVector GetRandomPointInVolume() const;
+
+	
 };

@@ -2,6 +2,7 @@
 
 
 #include "HealingItem.h"
+#include "CH3Character.h"
 
 AHealingItem::AHealingItem()
 {
@@ -14,11 +15,11 @@ void AHealingItem::ActivateItem(AActor* Activator)
 	{
 		if (Activator && Activator->ActorHasTag("Player"))
 		{
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				2.0f,
-				FColor::Green,
-				FString::Printf(TEXT("Player gained %d HP!!!"), HealAmount));
+			if (ACH3Character* PlayerCharacter = Cast< ACH3Character>(Activator))
+			{
+				PlayerCharacter->AddHealth(HealAmount);
+			}
+
 			DestroyItem();
 		}
 	}

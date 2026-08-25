@@ -2,6 +2,8 @@
 
 
 #include "CoinIteam.h"
+#include "Engine/World.h"
+#include "CH3GameState.h"
 
 ACoinItem::ACoinItem()
 {
@@ -13,11 +15,14 @@ void ACoinItem::ActivateItem(AActor* Activator)
 {
 	if (Activator && Activator->ActorHasTag("Player"))
 	{
-		GEngine->AddOnScreenDebugMessage(
-			-1,
-			2.0f,
-			FColor::Green,
-			FString::Printf(TEXT("Player Gained %d Points!!!"), PointValue));
+		if (UWorld* World = GetWorld())
+		{
+			if (ACH3GameState* GameState = World->GetGameState<ACH3GameState>())
+			{
+				GameState->AddScore(PointValue);
+			}
+		}
+
 		DestroyItem();
 	}
 }

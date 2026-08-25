@@ -3,6 +3,7 @@
 
 #include "MineItem.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AMineItem::AMineItem()
 {
@@ -36,12 +37,13 @@ void AMineItem::Explode()
 	{
 		if (Actor && Actor->ActorHasTag("Player"))
 		{
-			GEngine->AddOnScreenDebugMessage(
-				-1,
-				2.0f,
-				FColor::Green,
-				FString::Printf(TEXT("Player Damge %d by MineItem!!!"), ExplosionDamge));
-			DestroyItem();
+			UGameplayStatics::ApplyDamage(
+				Actor,
+				ExplosionDelay,
+				nullptr,
+				this,
+				UDamageType::StaticClass()
+			);
 		}
 	}
 	DestroyItem();

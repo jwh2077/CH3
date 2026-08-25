@@ -22,9 +22,25 @@ public:
 	USpringArmComponent* SpringArmComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera");
 	UCameraComponent* CameraComp;
+	
+	UFUNCTION(BlueprintPure, Category = "Health")
+	float GetHealth() const;
+	//체력 회복
+	UFUNCTION(BlueprintCallable , Category = "Health")
+	void AddHealth(float Amount);
 
 protected:
-	//캐릭터의 컨트롤러와 함수와 연결
+	//최대 체력
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float MaxHealth;
+	//현재 체력
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float Health;
+
+	//체력 감소
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+	// 캐릭터의 컨트롤러와 함수와 연결
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION()
@@ -39,6 +55,10 @@ protected:
 	void StarSprint(const FInputActionValue& value);
 	UFUNCTION()
 	void StopSprint(const FInputActionValue& value);
+
+	//게임오버
+	UFUNCTION()
+	void OnDeath();
 
 private:
 	float NormalSpeed;
