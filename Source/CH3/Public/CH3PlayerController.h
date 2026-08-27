@@ -27,6 +27,15 @@ public:
 	UInputAction* LookAction;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Input")
 	UInputAction* SprintAction;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+	TSubclassOf<UUserWidget> HUDWidgetClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+	UUserWidget* HUDWidgetInstance;
+	
+	UFUNCTION(BlueprintCallable, Category = "HUD")
+	UUserWidget* GetHUDWidget()const;
+
+
 
 protected:
 	virtual void BeginPlay() override;

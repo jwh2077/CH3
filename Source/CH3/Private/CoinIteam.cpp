@@ -20,6 +20,7 @@ void ACoinItem::ActivateItem(AActor* Activator)
 			if (ACH3GameState* GameState = World->GetGameState<ACH3GameState>())
 			{
 				GameState->AddScore(PointValue);
+				GameState->OnCoinCollecte();
 			}
 		}
 

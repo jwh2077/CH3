@@ -35,32 +35,34 @@ public:
 	//현재 레벨
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Level")
 	int32 CurrentLevelIndex;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Level")
 	int32 MaxLevels;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level")
+	TArray<FName>LevelMapNames;
 
 	FTimerHandle LevelTimerHandle;
+	FTimerHandle HUDUpdateTimerHandle;
 
 
 	//점수 확인
 	UFUNCTION(BlueprintPure, Category = "Score")
 	int GetScore()const;
-
 	//점수 추가
 	UFUNCTION(BlueprintCallable, Category = "Score")
 	void AddScore(int32 Amount);
-
 	//게임 종료
 	UFUNCTION(BlueprintCallable, Category = "Level")
 	void OnGameOver();
 	
 	//게임 시작
 	void StartLevel();
-
 	//타이머 종료시 실행
 	void OnLevelTimeUp();
-	
 	//특정 레벨 종료
 	void EndLevel();
+	//코인 카운터
+	void OnCoinCollecte();
+	//UI업데이트
+	void UpDateHUD();
 
 };
