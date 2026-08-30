@@ -25,8 +25,14 @@ public:
 	float ExplosionRedius;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	int32 ExplosionDamge;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|Effects")
+	UParticleSystem* ExplosionParticle;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item|Effects")
+	USoundBase* ExplosionSound;
 
 	FTimerHandle ExplosionTimerHandle;
+
+	bool bIsExploding;
 	
 	virtual void ActivateItem(AActor* Activator) override;
 

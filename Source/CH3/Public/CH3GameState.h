@@ -30,7 +30,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Coin")
 	int32 CollectedCoinCount;
 	//타이머 시간 조절
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Level")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Level")
 	float LevelDuration;
 	//현재 레벨
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Level")

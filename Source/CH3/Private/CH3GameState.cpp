@@ -24,7 +24,11 @@ void ACH3GameState::BeginPlay()
 {
 	Super::BeginPlay();
 
-	StartLevel();
+	FString CurrentMapName = GetWorld()->GetMapName();
+	if (!CurrentMapName.Contains(TEXT("MenuLevel")))
+	{
+		StartLevel();
+	}
 
 	GetWorldTimerManager().SetTimer(
 		HUDUpdateTimerHandle,
@@ -53,6 +57,14 @@ void ACH3GameState::AddScore(int32 Amount)
 
 void ACH3GameState::StartLevel()
 {
+	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+	{
+		if (ACH3PlayerController* CH3PlayerController = Cast<ACH3PlayerController>(PlayerController))
+		{
+			CH3PlayerController->ShoeGameHUD();
+		}
+	}
+	
 	if (UGameInstance* GameInstance = GetGameInstance())
 	{
 		UCH3GameInstance* CH3GameInstance = Cast<UCH3GameInstance>(GameInstance);
@@ -85,8 +97,6 @@ void ACH3GameState::StartLevel()
 		}
 	}
 
-	UpDateHUD();
-
 	GetWorldTimerManager().SetTimer(
 		LevelTimerHandle,
 		this,
@@ -95,7 +105,6 @@ void ACH3GameState::StartLevel()
 		false
 	);
 	
-	UE_LOG(LogTemp, Warning, TEXT("Level %d Start!, Spawnd %d coin"), CurrentLevelIndex + 1, SpawendCoinCount);
 }
 
 void ACH3GameState::OnLevelTimeUp()
@@ -148,8 +157,14 @@ void ACH3GameState::EndLevel()
 
 void ACH3GameState::OnGameOver()
 {
-	UpDateHUD();
-	UE_LOG(LogTemp, Warning, TEXT("Game Over!!"));
+	if (APlayerController* PlayerController = GetWorld()->GetFirstPlayerController())
+	{
+		if (ACH3PlayerController* CH3PlayerController = Cast<ACH3PlayerController>(PlayerController))
+		{
+			CH3PlayerController->SetPause(true);
+			CH3PlayerController->ShowMainMenu(true);
+		}
+	}
 }
 
 void ACH3GameState::UpDateHUD()

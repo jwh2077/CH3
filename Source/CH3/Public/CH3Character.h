@@ -8,6 +8,7 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UWidgetComponent;
 struct FInputActionValue;
 
 UCLASS()
@@ -22,12 +23,17 @@ public:
 	USpringArmComponent* SpringArmComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera");
 	UCameraComponent* CameraComp;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "UI")
+	UWidgetComponent* OverheadWidget;
 	
 	UFUNCTION(BlueprintPure, Category = "Health")
 	float GetHealth() const;
 	//체력 회복
 	UFUNCTION(BlueprintCallable , Category = "Health")
 	void AddHealth(float Amount);
+
+	UFUNCTION()
+	void BeginPlay()override;
 
 protected:
 	//최대 체력
@@ -59,6 +65,8 @@ protected:
 	//게임오버
 	UFUNCTION()
 	void OnDeath();
+
+	void UpdateOverheadHP();
 
 private:
 	float NormalSpeed;

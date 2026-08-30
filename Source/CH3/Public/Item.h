@@ -41,6 +41,4 @@ protected:
 	UFUNCTION(BlueprintPure, Category = "Item|Properties")
 	float GetRotationSpeed() const;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Item|Event")
-	void OnItemPickedUP();
 };

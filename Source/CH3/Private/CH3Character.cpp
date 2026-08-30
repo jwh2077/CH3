@@ -3,10 +3,13 @@
 
 #include "CH3Character.h"
 #include "CH3PlayerController.h"
+#include "CH3GameState.h"
 #include "EnhancedInputComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Components/TextBlock.h"
 
 // Sets default values
 ACH3Character::ACH3Character()
@@ -22,6 +25,10 @@ ACH3Character::ACH3Character()
 	CameraComp->SetupAttachment(SpringArmComp, USpringArmComponent::SocketName);
 	CameraComp->bUsePawnControlRotation = false;
 
+	OverheadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverheadWid"));
+	OverheadWidget->SetupAttachment(GetMesh());
+	OverheadWidget->SetWidgetSpace(EWidgetSpace::Screen);
+
 	NormalSpeed = 600.0f;
 	SprintSpeedMultiplier = 1.7f;
 	SprintSpeed = NormalSpeed * SprintSpeedMultiplier;
@@ -32,6 +39,11 @@ ACH3Character::ACH3Character()
 	Health = MaxHealth;
 }
 
+void ACH3Character::BeginPlay()
+{
+	Super::BeginPlay();
+	UpdateOverheadHP();
+}
 
 float ACH3Character::GetHealth() const
 {
@@ -41,9 +53,9 @@ float ACH3Character::GetHealth() const
 void ACH3Character::AddHealth(float Amount)
 {
 	Health = FMath::Clamp(Health + Amount, 0.0f, MaxHealth);
-
-	UE_LOG(LogTemp, Warning, TEXT("Health %f HP: %f"), Amount, Health);
+	UpdateOverheadHP();
 }
+
 
 float ACH3Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
 {
@@ -52,7 +64,7 @@ float ACH3Character::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 
 	Health = FMath::Clamp(Health - DamageAmount, 0.0f, MaxHealth);
 	
-	UE_LOG(LogTemp, Warning, TEXT("Damege %f HP: %f"),ActualDemage,Health);
+	UpdateOverheadHP();
 
 	if (Health <= 0)
 	{
@@ -179,6 +191,21 @@ void ACH3Character::StopSprint(const FInputActionValue& value)
 
 void ACH3Character::OnDeath()
 {
-	//게임 오버
+	ACH3GameState* CH3GameState = GetWorld() ? GetWorld()->GetGameState<ACH3GameState>() : nullptr;
+	if (CH3GameState)
+	{
+		CH3GameState->OnGameOver();
+	}
 }
 
+void ACH3Character::UpdateOverheadHP()
+{
+	if (!OverheadWidget) return;
+
+	UUserWidget* OverheadWidgetInstance = OverheadWidget->GetUserWidgetObject();
+	if (!OverheadWidgetInstance)return;
+	if (UTextBlock* HPText = Cast<UTextBlock>(OverheadWidgetInstance->GetWidgetFromName(TEXT("OverheadHP"))))
+	{
+		HPText->SetText(FText::FromString(FString::Printf(TEXT("%.0f / %.0f"), Health, MaxHealth)));
+	}
+}

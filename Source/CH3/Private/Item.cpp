@@ -34,7 +34,6 @@ AItem::AItem()
 void AItem::BeginPlay()
 {
 	Super::BeginPlay();
-	OnItemPickedUP();
 }
 
 void AItem::Tick(float DeltaTime)

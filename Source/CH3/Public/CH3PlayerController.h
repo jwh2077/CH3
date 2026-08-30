@@ -29,13 +29,24 @@ public:
 	UInputAction* SprintAction;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
 	TSubclassOf<UUserWidget> HUDWidgetClass;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD")
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD")
 	UUserWidget* HUDWidgetInstance;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Menu")
+	TSubclassOf<UUserWidget> MainMenuWidgetClass;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Menu")
+	UUserWidget* MainMenuWidgetInstance;
+
 	UFUNCTION(BlueprintCallable, Category = "HUD")
 	UUserWidget* GetHUDWidget()const;
 
+	UFUNCTION(BlueprintCallable, Category = "HUD")
+	void ShoeGameHUD();
 
+	UFUNCTION(BlueprintCallable, Category = "Menu")
+	void ShowMainMenu(bool bIsRestart);
+	UFUNCTION(BlueprintCallable, Category = "Menu")
+	void StartGame();
 
 protected:
 	virtual void BeginPlay() override;
