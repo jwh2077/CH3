@@ -6,7 +6,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Particles/ParticleSystemComponent.h"
 
-// Sets default values
+ // Sets default values
 ABaseItem::ABaseItem()
 {
 	PrimaryActorTick.bCanEverTick = false;
@@ -71,15 +71,20 @@ void ABaseItem::ActivateItem(AActor* Activator)
 		);
 	}
 
+	// 포인터로 바꾸면 고쳐진다고 하니 고쳐,,?
 	if (Particle)
 	{
-		FTimerHandle DestroyParticleTimerHandle;
+		TWeakObjectPtr<UParticleSystemComponent> WeakParticle = Particle;
 
+		FTimerHandle DestroyParticleTimerHandle;
 		GetWorld()->GetTimerManager().SetTimer(
 			DestroyParticleTimerHandle,
-			[Particle]()
+			[WeakParticle]() mutable
 			{
-				Particle->DestroyComponent();
+				if (WeakParticle.IsValid())
+				{
+					WeakParticle->DestroyComponent();
+				}
 			},
 			2.0f,
 			false
